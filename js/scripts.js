@@ -1,25 +1,41 @@
-let x = document.querySelector(".x");
-let o = document.querySelector(".o");
-let boxes = document.querySelectorAll(".box");
-let buttons = document.querySelectorAll("#buttons-container button");
-let messageContainer = document.querySelector("#message");
-let messageText = document.querySelector("#message p");
-let secondPlayer;
+const x = document.querySelector(".x");
+const o = document.querySelector(".o");
+const boxes = document.querySelectorAll(".box");
+const buttons = document.querySelectorAll("#buttons-container button");
+const messageContainer = document.querySelector("#message");
+const messageText = document.querySelector("#message p");
 
+let secondPlayer;
 let player1 = 0;
 let player2 = 0;
+let gameOver = false;
 
-for (let i = 0; i < boxes.length; i++) {
-  boxes[i].addEventListener("click", function () {
-    let el = checkEl(player1, player2);
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    secondPlayer = btn.id;
 
-    if (this.childNodes.length == 0) {
-      let cloneEl = el.cloneNode(true);
+    buttons.forEach(b => (b.style.display = "none"));
+    setTimeout(() => {
+      document.querySelector("#container").classList.remove("hide");
+    }, 500);
+  });
+});
 
-      this.appendChild(cloneEl);
+boxes.forEach(box => {
+  box.addEventListener("click", () => {
+    if (gameOver) return; 
 
-      if (player1 == player2) {
+    if (!box.firstElementChild) {
+      const el = player1 === player2 ? x : o;
+      const cloneEl = el.cloneNode(true);
+      box.appendChild(cloneEl);
+
+      if (player1 === player2) {
         player1++;
+        if (secondPlayer === "ai-player" && !gameOver) {
+          computerPlay();
+          player2++;
+        }
       } else {
         player2++;
       }
@@ -27,16 +43,7 @@ for (let i = 0; i < boxes.length; i++) {
       checkWinCondition();
     }
   });
-}
-
-function checkEl(player1, player2) {
-  if (player1 == player2) {
-    el = x;
-  } else {
-    el = o;
-  }
-  return el;
-}
+});
 
 function checkWinCondition() {
   let b1 = document.getElementById("block-1");
@@ -50,7 +57,7 @@ function checkWinCondition() {
   let b9 = document.getElementById("block-9");
 
   if (
-    b1.childNodes.lenght > 0 &&
+    b1.childNodes.length > 0 &&
     b2.childNodes.length > 0 &&
     b3.childNodes.length > 0
   ) {
@@ -59,12 +66,14 @@ function checkWinCondition() {
     let b3Child = b3.childNodes[0].className;
 
     if (b1Child == "x" && b2Child == "x" && b3Child == "x") {
+      declareWinner("x");
     } else if (b1Child == "o" && b2Child == "o" && b3Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b4.childNodes.lenght > 0 &&
+    b4.childNodes.length > 0 &&
     b5.childNodes.length > 0 &&
     b6.childNodes.length > 0
   ) {
@@ -73,12 +82,14 @@ function checkWinCondition() {
     let b6Child = b6.childNodes[0].className;
 
     if (b4Child == "x" && b5Child == "x" && b6Child == "x") {
+      declareWinner("x");
     } else if (b4Child == "o" && b5Child == "o" && b6Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b7.childNodes.lenght > 0 &&
+    b7.childNodes.length > 0 &&
     b8.childNodes.length > 0 &&
     b9.childNodes.length > 0
   ) {
@@ -87,12 +98,14 @@ function checkWinCondition() {
     let b9Child = b9.childNodes[0].className;
 
     if (b7Child == "x" && b8Child == "x" && b9Child == "x") {
+      declareWinner("x");
     } else if (b7Child == "o" && b8Child == "o" && b9Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b1.childNodes.lenght > 0 &&
+    b1.childNodes.length > 0 &&
     b4.childNodes.length > 0 &&
     b7.childNodes.length > 0
   ) {
@@ -101,12 +114,14 @@ function checkWinCondition() {
     let b7Child = b7.childNodes[0].className;
 
     if (b1Child == "x" && b4Child == "x" && b7Child == "x") {
+      declareWinner("x");
     } else if (b1Child == "o" && b4Child == "o" && b7Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b2.childNodes.lenght > 0 &&
+    b2.childNodes.length > 0 &&
     b5.childNodes.length > 0 &&
     b8.childNodes.length > 0
   ) {
@@ -115,12 +130,14 @@ function checkWinCondition() {
     let b8Child = b8.childNodes[0].className;
 
     if (b2Child == "x" && b5Child == "x" && b8Child == "x") {
+      declareWinner("x");
     } else if (b2Child == "o" && b5Child == "o" && b8Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b3.childNodes.lenght > 0 &&
+    b3.childNodes.length > 0 &&
     b6.childNodes.length > 0 &&
     b9.childNodes.length > 0
   ) {
@@ -129,12 +146,14 @@ function checkWinCondition() {
     let b9Child = b9.childNodes[0].className;
 
     if (b3Child == "x" && b6Child == "x" && b9Child == "x") {
+      declareWinner("x");
     } else if (b3Child == "o" && b6Child == "o" && b9Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b1.childNodes.lenght > 0 &&
+    b1.childNodes.length > 0 &&
     b5.childNodes.length > 0 &&
     b9.childNodes.length > 0
   ) {
@@ -143,12 +162,14 @@ function checkWinCondition() {
     let b9Child = b9.childNodes[0].className;
 
     if (b1Child == "x" && b5Child == "x" && b9Child == "x") {
+      declareWinner("x");
     } else if (b1Child == "o" && b5Child == "o" && b9Child == "o") {
+      declareWinner("o");
     }
   }
 
   if (
-    b3.childNodes.lenght > 0 &&
+    b3.childNodes.length > 0 &&
     b5.childNodes.length > 0 &&
     b7.childNodes.length > 0
   ) {
@@ -157,19 +178,67 @@ function checkWinCondition() {
     let b7Child = b7.childNodes[0].className;
 
     if (b3Child == "x" && b5Child == "x" && b7Child == "x") {
+      declareWinner("x");
     } else if (b3Child == "o" && b5Child == "o" && b7Child == "o") {
+      declareWinner("o");
     }
   }
 
   let counter = 0;
 
-  for(let i = 0; i < boxes.length; i++){
-    if(boxes[i].childNodes[0] != undefined){
-        counter++;
+  for (let i = 0; i < boxes.length; i++) {
+    if (boxes[i].childNodes[0] != undefined) {
+      counter++;
     }
 
-    if(counter == 9){
-        console.log('deu velha');
+    if (counter == 9) {
+      declareWinner("velha");
     }
   }
+}
+
+function declareWinner(winner) {
+  gameOver = true;
+
+  const scoreboardX = document.querySelector("#scoreboard-1");
+  const scoreboardY = document.querySelector("#scoreboard-2");
+  let msg = "";
+
+  if (winner === "x") {
+    scoreboardX.textContent = parseInt(scoreboardX.textContent) + 1;
+    msg = "O jogador 1 venceu!";
+  } else if (winner === "o") {
+    scoreboardY.textContent = parseInt(scoreboardY.textContent) + 1;
+    msg = "O jogador 2 venceu!";
+  } else {
+    msg = "Deu velha!";
+  }
+
+  messageText.textContent = msg;
+  messageContainer.classList.remove("hide");
+
+  setTimeout(() => {
+    messageContainer.classList.add("hide");
+    resetGame();
+  }, 3000);
+}
+
+function resetGame() {
+  gameOver = false;
+  player1 = 0;
+  player2 = 0;
+  document.querySelectorAll(".box div").forEach(el => el.remove());
+}
+
+function computerPlay() {
+  if (gameOver) return;
+
+  const emptyBoxes = Array.from(boxes).filter(b => !b.firstElementChild);
+  if (emptyBoxes.length === 0) return;
+
+  const index = Math.floor(Math.random() * emptyBoxes.length);
+  const cloneO = o.cloneNode(true);
+  emptyBoxes[index].appendChild(cloneO);
+
+  checkWinCondition();
 }
